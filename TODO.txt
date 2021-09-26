@@ -1,0 +1,2 @@
+setup expo-sentry
+hide keyboard when touch off keyboard
