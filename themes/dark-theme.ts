@@ -1,5 +1,19 @@
-import DefaultTheme from './default-theme';
+import { DarkTheme as DarkPaperTheme } from 'react-native-paper';
+import { DarkTheme as DarkNavTheme } from '@react-navigation/native';
 
+// try using os apperance via Apperance API
+
+const DarkTheme = {
+  ...DarkPaperTheme,
+  ...DarkNavTheme,
+  colors: {
+    ...DarkPaperTheme.colors,
+    ...DarkNavTheme.colors,
+    border: 'rgb(216, 216, 216)',
+  },
+};
+
+/*
 const DarkTheme = {
   ...DefaultTheme,
   dark: true,
@@ -19,6 +33,7 @@ const DarkTheme = {
     border: 'rgb(39, 39, 41)',
   },
   mode: 'adaptive',
-} as const;
+};
+*/
 
 export default DarkTheme;

@@ -1,3 +1,18 @@
+import { DefaultTheme as DefaultPaperTheme } from 'react-native-paper';
+import { DefaultTheme as DefaultNavTheme } from '@react-navigation/native';
+
+// try using os apperance via Apperance API
+
+const DefaultTheme = {
+  ...DefaultPaperTheme,
+  ...DefaultNavTheme,
+  colors: {
+    ...DefaultPaperTheme.colors,
+    ...DefaultNavTheme.colors,
+  },
+};
+
+/*
 const DefaultTheme = {
   dark: false,
   roundness: 4,
@@ -37,11 +52,7 @@ const DefaultTheme = {
   animation: {
     scale: 1,
   },
-  padding: {
-    s: 4,
-    m: 6,
-    l: 12,
-  },
-} as const;
-
+  mode: 'exact',
+};
+*/
 export default DefaultTheme;
