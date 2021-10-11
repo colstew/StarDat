@@ -2,11 +2,44 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-const VolplotTextInput = () : JSX.Element => (
+interface Props {
+  height: string,
+  setHeight: (val: string) => void,
+  dbh: string,
+  setDBH: (val: string) => void,
+  nf: string,
+  setNF: (val: string) => void,
+}
+const VolplotTextInput = ({
+  height,
+  setHeight,
+  dbh,
+  setDBH,
+  nf,
+  setNF,
+}: Props) : JSX.Element => (
   <View style={style.row}>
-    <TextInput style={style.textInputL} keyboardType="numeric" label="DBH (cm)" />
-    <TextInput style={style.textInputC} keyboardType="numeric" label="Height (m)" />
-    <TextInput style={style.textInputR} value="99" keyboardType="numeric" label="NF (%)" />
+    <TextInput
+      style={style.textInputL}
+      keyboardType="numeric"
+      label="DBH (cm)"
+      value={dbh}
+      onChangeText={(text) => setDBH(text)}
+    />
+    <TextInput
+      style={style.textInputC}
+      keyboardType="numeric"
+      label="Height (m)"
+      value={height}
+      onChangeText={(text) => setHeight(text)}
+    />
+    <TextInput
+      style={style.textInputR}
+      keyboardType="numeric"
+      label="NF (%)"
+      value={nf}
+      onChangeText={(text) => setNF(text)}
+    />
   </View>
 );
 

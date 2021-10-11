@@ -2,13 +2,17 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
-const AddButton = () : JSX.Element => (
+interface Props {
+  addTree: () => void
+}
+
+const AddButton = ({ addTree }: Props) : JSX.Element => (
   <Button
     style={style.button}
     contentStyle={style.buttonCont}
     mode="outlined"
     icon="plus-circle"
-    onPress={() => undefined}
+    onPress={addTree}
   >
     Add
   </Button>

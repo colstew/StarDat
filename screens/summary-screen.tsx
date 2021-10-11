@@ -1,25 +1,68 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Surface, Title } from 'react-native-paper';
+import { Surface, Text, Title } from 'react-native-paper';
 import Header from '../components/header';
 import SweepTable from '../components/sweep-table';
 import VolPlotTable from '../components/volplot-table';
+import StateContext from '../contexts/state-context';
+import TableTabs from '../components/table-tabs';
 
-const SummaryScreen = () : JSX.Element => (
-  <>
-    <Header />
-    <View style={style.container}>
-      <Surface style={style.topSurface}>
-        <Title>Sweeps</Title>
-        <SweepTable tabs />
-      </Surface>
-      <Surface style={style.bottomSurface}>
-        <Title>Volume Plots</Title>
-        <VolPlotTable tabs />
-      </Surface>
-    </View>
-  </>
-);
+const SummaryScreen = () : JSX.Element => {
+  const { sweeps, volplots } = React.useContext(StateContext);
+  const [activeSweepTab, setActiveSweepTab] = React.useState('1');
+  const [activeVolPlotTab, setActiveVolPlotTab] = React.useState('1');
+
+  const sweepDisplay = () => {
+    if (sweeps.length > 0) {
+      return (
+        <>
+          <TableTabs
+            activeTab={activeSweepTab}
+            setTab={setActiveSweepTab}
+            count={sweeps.length}
+          />
+          <SweepTable tabs trees={sweeps[Number(activeSweepTab) - 1].trees} />
+        </>
+      );
+    }
+    return (
+      <Text>No Sweeps To Show</Text>
+    );
+  };
+
+  const volPlotDisplay = () => {
+    if (volplots.length > 0) {
+      return (
+        <>
+          <TableTabs
+            activeTab={activeVolPlotTab}
+            setTab={setActiveVolPlotTab}
+            count={volplots.length}
+          />
+          <VolPlotTable tabs trees={volplots[Number(activeVolPlotTab) - 1].trees} />
+        </>
+      );
+    }
+    return (
+      <Text>No Volume Plots To Show</Text>
+    );
+  };
+  return (
+    <>
+      <Header />
+      <View style={style.container}>
+        <Surface style={style.topSurface}>
+          <Title>Sweeps</Title>
+          {sweepDisplay()}
+        </Surface>
+        <Surface style={style.bottomSurface}>
+          <Title>Volume Plots</Title>
+          {volPlotDisplay()}
+        </Surface>
+      </View>
+    </>
+  );
+};
 
 const style = StyleSheet.create({
 
@@ -32,17 +75,17 @@ const style = StyleSheet.create({
   topSurface: {
     flex: 1,
     margin: 6,
-    padding: 12, // interMargin,
+    padding: 12,
     elevation: 4,
-    borderRadius: 8, // match theme
+    borderRadius: 8,
   },
   bottomSurface: {
     flex: 1,
     margin: 6,
-    padding: 12, // interMargin,
+    padding: 12,
     marginTop: 0,
     elevation: 4,
-    borderRadius: 8, // match theme
+    borderRadius: 8,
   },
 });
 

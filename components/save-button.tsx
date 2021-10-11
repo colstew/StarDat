@@ -2,12 +2,16 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
-const SaveButton = () : JSX.Element => (
+interface Props {
+  onSave: () => void
+}
+
+const SaveButton = ({ onSave }: Props) : JSX.Element => (
   <Button
     style={style.button}
     contentStyle={style.buttonCont}
     mode="contained"
-    // onPress={}
+    onPress={onSave}
   >
     Save
   </Button>

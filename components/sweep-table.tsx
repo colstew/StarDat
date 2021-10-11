@@ -1,16 +1,18 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { DataTable, useTheme } from 'react-native-paper';
-import TableTabs from './table-tabs';
+import { DataTable, useTheme, IconButton } from 'react-native-paper';
+import { SweepTrees } from '../contexts/state-context';
 
 interface Props{
-  tabs? : boolean,
+  tabs?: boolean
+  trees: SweepTrees,
+  removeTree?: (key: string) => void,
 }
-const SweepTable = ({ tabs = false } : Props) : JSX.Element => {
+
+const SweepTable = ({ tabs, trees, removeTree } : Props) : JSX.Element => {
   const theme = useTheme();
   return (
     <>
-      {tabs && <TableTabs />}
       <View style={style.tableView}>
         <DataTable style={[
           style.table,
@@ -24,16 +26,24 @@ const SweepTable = ({ tabs = false } : Props) : JSX.Element => {
           <DataTable.Header>
             <DataTable.Title>Species</DataTable.Title>
             <DataTable.Title numeric>Count</DataTable.Title>
+            {removeTree && <DataTable.Title numeric> </DataTable.Title>}
           </DataTable.Header>
           <ScrollView>
-            <DataTable.Row>
-              <DataTable.Cell>C 175</DataTable.Cell>
-              <DataTable.Cell numeric>2</DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row>
-              <DataTable.Cell>F 575</DataTable.Cell>
-              <DataTable.Cell numeric>1</DataTable.Cell>
-            </DataTable.Row>
+            {Object.keys(trees).map((key) => (
+              <DataTable.Row key={key}>
+                <DataTable.Cell>{key}</DataTable.Cell>
+                <DataTable.Cell numeric>{trees[key]}</DataTable.Cell>
+                {removeTree && (
+                  <DataTable.Cell numeric>
+                    <IconButton
+                      icon="minus-circle-outline"
+                      size={20}
+                      onPress={() => removeTree(key)}
+                    />
+                  </DataTable.Cell>
+                )}
+              </DataTable.Row>
+            ))}
           </ScrollView>
         </DataTable>
       </View>

@@ -11,30 +11,43 @@ export default function NavBar() : React.ReactElement {
   return (
     <Tab.Navigator
       initialRouteName="Summary"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color }) => {
-          let iconName;
-
-          if (route.name === 'Sweep') {
-            iconName = focused
-              ? 'plus-circle'
-              : 'plus-circle-outline';
-          } else if (route.name === 'Volume Plot') {
-            iconName = focused
-              ? 'plus-circle-multiple'
-              : 'plus-circle-multiple-outline';
-          } else if (route.name === 'Summary') {
-            iconName = focused
-              ? 'text-box'
-              : 'text-box-outline';
-          }
-          return <MaterialCommunityIcons name={iconName} size={24} color={color} />;
-        },
-      })}
     >
-      <Tab.Screen name="Sweep" component={SweepScreen} />
-      <Tab.Screen name="Volume Plot" component={VolPlotScreen} />
-      <Tab.Screen name="Summary" component={SummaryScreen} />
+      <Tab.Screen
+        name="Sweep"
+        component={SweepScreen}
+        options={{
+          tabBarIcon: ({ focused, color }) => {
+            if (focused) {
+              return <MaterialCommunityIcons name="plus-circle" size={24} color={color} />;
+            }
+            return <MaterialCommunityIcons name="plus-circle-outline" size={24} color={color} />;
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Volume Plot"
+        component={VolPlotScreen}
+        options={{
+          tabBarIcon: ({ focused, color }) => {
+            if (focused) {
+              return <MaterialCommunityIcons name="plus-circle-multiple" size={24} color={color} />;
+            }
+            return <MaterialCommunityIcons name="plus-circle-multiple-outline" size={24} color={color} />;
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Summary"
+        component={SummaryScreen}
+        options={{
+          tabBarIcon: ({ focused, color }) => {
+            if (focused) {
+              return <MaterialCommunityIcons name="text-box" size={24} color={color} />;
+            }
+            return <MaterialCommunityIcons name="text-box-outline" size={24} color={color} />;
+          },
+        }}
+      />
     </Tab.Navigator>
   );
 }
