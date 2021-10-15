@@ -8,6 +8,7 @@ import AddButton from '../components/add-button';
 import SaveButton from '../components/save-button';
 import VolplotTextInput from '../components/volplot-text-input';
 import StateContext, { VolPlotTree } from '../contexts/state-context';
+import getLocation from '../datahandle';
 
 const VolPlotScreen = () : JSX.Element => {
   const { addPlot } = React.useContext(StateContext);
@@ -33,7 +34,7 @@ const VolPlotScreen = () : JSX.Element => {
     trees.splice(index, 1);
     setTrees([...trees]);
   };
-  const onSave = () => {
+  const onSave = async () => {
     if (trees.length > 0) {
       Keyboard.dismiss();
       setSpecies('');
@@ -43,7 +44,7 @@ const VolPlotScreen = () : JSX.Element => {
       setTrees([]);
       setNF('99');
       addPlot({
-        utm: 'Test',
+        loc: await getLocation(),
         baf: 8, // // TODO: get from settings
         trees,
         volhaPlot: 0, // TODO: calc
@@ -56,7 +57,7 @@ const VolPlotScreen = () : JSX.Element => {
   };
   return (
     <>
-      <Header />
+      <Header title="New Volume Plot" />
       <View style={style.container}>
         <Surface style={style.topSurface}>
           <TreeButtons

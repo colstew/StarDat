@@ -2,6 +2,10 @@ import React from 'react';
 
 // TODO: get species names from settings
 
+export interface Loc {
+  lat: number | null,
+  lng: number | null,
+}
 export interface SweepTrees {
   [index: string]: number,
 }
@@ -15,7 +19,7 @@ export interface VolPlotTree {
 }
 
 export interface Sweep {
-  utm: string,
+  loc: Loc,
   baf: number,
   trees: SweepTrees,
   dbh: string,
@@ -23,7 +27,7 @@ export interface Sweep {
 }
 
 export interface Plot {
-  utm: string,
+  loc: Loc,
   baf: number,
   trees: VolPlotTree[],
   volhaPlot: number,

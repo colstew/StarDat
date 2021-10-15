@@ -17,8 +17,6 @@ const TreeButtons = ({
   value,
   setValue,
 }: Props) : React.ReactElement => (
-  // const [species, setSpecies] = React.useState('');
-  // const [value, setValue] = React.useState('');
   <>
     <ToggleButton.Row
       style={style.row}

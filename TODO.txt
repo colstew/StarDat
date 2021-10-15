@@ -2,5 +2,4 @@ setup expo-sentry
 hide keyboard when touch off keyboard
 make save button not avoid keyboard
 make settings not avoid keyboard
-add UTM
 string format 

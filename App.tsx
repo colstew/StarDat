@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
+import * as Location from 'expo-location';
 import StateContext, { Sweep, Plot } from './contexts/state-context';
 import NavBar from './components/nav-bar';
 import DefaultTheme from './themes/default-theme';
@@ -17,7 +18,6 @@ const storeLocal = async (key: string, value: Sweep[] | Plot[]) => {
   }
 };
 
-/*
 const localSweepsRetrieve = async (set: (val: Sweep[])=> void) => {
   try {
     const jsonValue = await AsyncStorage.getItem('@sweeps');
@@ -37,7 +37,6 @@ const localVolPlotRetrieve = async (set: (val: Plot[])=> void) => {
     // read error
   }
 };
-*/
 
 export default function App() : React.ReactElement {
   const [isThemeDark, setIsThemeDark] = React.useState(false);
@@ -68,9 +67,29 @@ export default function App() : React.ReactElement {
     storeLocal('@volplots', volplots);
   };
 
+  // request location permission
+  useEffect(() => {
+    (async () => {
+      try {
+        const { granted } = await Location.getForegroundPermissionsAsync();
+        if (!granted) {
+          const { granted: given } = await Location.requestForegroundPermissionsAsync();
+          if (!given) {
+            throw new Error('Location Permisson Required'); // TODO: notify before termination
+          }
+        }
+      } catch {
+        // TODO: handle error
+      }
+    })();
+  }, []);
+
   // load local sweeps and volplots
-  // localSweepsRetrieve(setSweeps);
-  // localVolPlotRetrieve(setVolPlots);
+  useEffect(() => {
+    localSweepsRetrieve(setSweeps);
+    localVolPlotRetrieve(setVolPlots);
+  }, []);
+
   return (
     <StateContext.Provider value={{
       isThemeDark,

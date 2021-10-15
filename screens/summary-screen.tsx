@@ -47,9 +47,10 @@ const SummaryScreen = () : JSX.Element => {
       <Text>No Volume Plots To Show</Text>
     );
   };
+
   return (
     <>
-      <Header />
+      <Header title="Summary" />
       <View style={style.container}>
         <Surface style={style.topSurface}>
           <Title>Sweeps</Title>

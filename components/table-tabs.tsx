@@ -12,6 +12,9 @@ interface Props {
 }
 
 const TableTabs = ({ activeTab, setTab, count } :Props) : JSX.Element => {
+  const updateTab = (value: string) => {
+    if (value) setTab(value);
+  };
   const tabs = [];
   for (let index = 0; index < count; index += 1) {
     tabs.push(
@@ -24,7 +27,7 @@ const TableTabs = ({ activeTab, setTab, count } :Props) : JSX.Element => {
     );
   }
   return (
-    <ToggleButton.Row onValueChange={(value) => setTab(value)} value={activeTab}>
+    <ToggleButton.Row onValueChange={updateTab} value={activeTab}>
       {count > 1 && tabs}
     </ToggleButton.Row>
   );

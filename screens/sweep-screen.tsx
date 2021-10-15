@@ -8,6 +8,7 @@ import SaveButton from '../components/save-button';
 import SweepTable from '../components/sweep-table';
 import SweepTextInput from '../components/sweep-text-input';
 import StateContext, { SweepTrees } from '../contexts/state-context';
+import getLocation from '../datahandle';
 
 const SweepScreen = () : JSX.Element => {
   const { addSweep } = React.useContext(StateContext);
@@ -36,7 +37,8 @@ const SweepScreen = () : JSX.Element => {
     }
     setTrees({ ...trees });
   };
-  const onSave = () => {
+  const onSave = async () => {
+    // TODO: add loading flag
     if (Object.keys(trees).length > 0 && dbh && height) {
       Keyboard.dismiss();
       setSpecies('');
@@ -45,7 +47,7 @@ const SweepScreen = () : JSX.Element => {
       setHeight('');
       setTrees({});
       addSweep({
-        utm: 'Test',
+        loc: await getLocation(),
         baf: 8, // get from settings
         trees,
         dbh,
@@ -55,7 +57,7 @@ const SweepScreen = () : JSX.Element => {
   };
   return (
     <>
-      <Header />
+      <Header title="New Sweep" />
       <View style={style.container}>
         <Surface style={style.topSurface}>
           <TreeButtons
