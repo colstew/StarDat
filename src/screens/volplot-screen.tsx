@@ -7,11 +7,13 @@ import VolPlotTable from '../components/volplot-table';
 import AddButton from '../components/add-button';
 import SaveButton from '../components/save-button';
 import VolplotTextInput from '../components/volplot-text-input';
-import StateContext, { VolPlotTree } from '../contexts/state-context';
-import getLocation from '../datahandle';
+import { VolPlotTree } from '../utils/data-types';
+import getLocation from '../utils/get-location';
+import { useAppDispatch } from '../redux/hooks';
+import { addVolPlot } from '../redux/reducers';
 
 const VolPlotScreen = () : JSX.Element => {
-  const { addPlot } = React.useContext(StateContext);
+  const dispatch = useAppDispatch();
   const [species, setSpecies] = React.useState('');
   const [value, setValue] = React.useState('');
   const [dbh, setDBH] = React.useState('');
@@ -27,6 +29,8 @@ const VolPlotScreen = () : JSX.Element => {
         nf,
         volume: 'To Calc', // TODO: do vol calc
       });
+      setDBH('');
+      setHeight('');
       setTrees([...trees]);
     }
   };
@@ -43,8 +47,8 @@ const VolPlotScreen = () : JSX.Element => {
       setHeight('');
       setTrees([]);
       setNF('99');
-      addPlot({
-        loc: await getLocation(),
+      dispatch(addVolPlot({
+        location: await getLocation(),
         baf: 8, // // TODO: get from settings
         trees,
         volhaPlot: 0, // TODO: calc
@@ -52,7 +56,7 @@ const VolPlotScreen = () : JSX.Element => {
         pieceAvg: 0, // TODO: calc
         vbar: 0, // TODO: calc
 
-      });
+      }));
     }
   };
   return (

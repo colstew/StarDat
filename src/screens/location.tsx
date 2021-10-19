@@ -7,6 +7,7 @@ import {
   Subheading,
 } from 'react-native-paper';
 import { LocationObject } from 'expo-location';
+import { toUTM } from '../utils/get-location';
 
 interface Props {
   visible: boolean,
@@ -39,6 +40,7 @@ const Location = ({ visible, close } : Props) : JSX.Element => {
         <Dialog.Content>
           <Subheading>{`Latitude: ${location?.coords.latitude}`}</Subheading>
           <Subheading>{`Longitude: ${location?.coords.longitude}`}</Subheading>
+          <Subheading>{`UTM: ${location ? toUTM(location).toString() : ''}`}</Subheading>
           <Subheading>{`Acuracy (m): ${round(location?.coords.accuracy)}`}</Subheading>
         </Dialog.Content>
         <Dialog.Actions>

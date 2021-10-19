@@ -4,11 +4,12 @@ import { Surface, Text, Title } from 'react-native-paper';
 import Header from '../components/header';
 import SweepTable from '../components/sweep-table';
 import VolPlotTable from '../components/volplot-table';
-import StateContext from '../contexts/state-context';
 import TableTabs from '../components/table-tabs';
+import { useAppSelector } from '../redux/hooks';
 
 const SummaryScreen = () : JSX.Element => {
-  const { sweeps, volplots } = React.useContext(StateContext);
+  const sweeps = useAppSelector((state) => state.sweeps);
+  const volplots = useAppSelector((state) => state.volplots);
   const [activeSweepTab, setActiveSweepTab] = React.useState('1');
   const [activeVolPlotTab, setActiveVolPlotTab] = React.useState('1');
 
@@ -26,7 +27,7 @@ const SummaryScreen = () : JSX.Element => {
       );
     }
     return (
-      <Text>No Sweeps To Show</Text>
+      <Text>No Sweeps to show</Text>
     );
   };
 
@@ -44,7 +45,7 @@ const SummaryScreen = () : JSX.Element => {
       );
     }
     return (
-      <Text>No Volume Plots To Show</Text>
+      <Text>No Volume Plots to show</Text>
     );
   };
 

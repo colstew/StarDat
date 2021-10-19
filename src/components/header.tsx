@@ -7,6 +7,7 @@ import {
 } from 'react-native-paper';
 import Import from '../screens/import';
 import Export from '../screens/export';
+import Clear from '../screens/clear';
 import Location from '../screens/location';
 import Settings from '../screens/settings';
 
@@ -21,6 +22,7 @@ const Header = ({ title }: Props) : JSX.Element => {
     menu: false,
     import: false,
     export: false,
+    clear: false,
     location: false,
     settings: false,
   });
@@ -29,6 +31,7 @@ const Header = ({ title }: Props) : JSX.Element => {
     menu: () => setVisible({ ...visible, menu: false }),
     import: () => setVisible({ ...visible, import: false }),
     export: () => setVisible({ ...visible, export: false }),
+    clear: () => setVisible({ ...visible, clear: false }),
     location: () => setVisible({ ...visible, location: false }),
     settings: () => setVisible({ ...visible, settings: false }),
   };
@@ -37,6 +40,7 @@ const Header = ({ title }: Props) : JSX.Element => {
     menu: () => setVisible({ ...visible, menu: true }),
     import: () => setVisible({ ...visible, import: true, menu: false }),
     export: () => setVisible({ ...visible, export: true, menu: false }),
+    clear: () => setVisible({ ...visible, clear: true, menu: false }),
     location: () => setVisible({ ...visible, location: true, menu: false }),
     settings: () => setVisible({ ...visible, settings: true, menu: false }),
   };
@@ -59,12 +63,14 @@ const Header = ({ title }: Props) : JSX.Element => {
         >
           <Menu.Item onPress={open.import} icon="download" title="Import" />
           <Menu.Item onPress={open.export} icon="upload" title="Export" />
+          <Menu.Item onPress={open.clear} icon="close-circle" title="Clear" />
           <Menu.Item onPress={open.location} icon="map-marker" title="Location" />
           <Menu.Item onPress={open.settings} icon="cog" title="Settings" />
         </Menu>
       </Appbar.Header>
       <Import visible={visible.import} close={close.import} />
       <Export visible={visible.export} close={close.export} />
+      <Clear visible={visible.clear} close={close.clear} />
       <Location visible={visible.location} close={close.location} />
       <Settings visible={visible.settings} close={close.settings} />
     </>

@@ -9,7 +9,8 @@ import {
   List,
   TextInput,
 } from 'react-native-paper';
-import StateContext from '../contexts/state-context';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { toggleDarkTheme } from '../redux/reducers';
 
 interface Props {
   visible: boolean,
@@ -17,7 +18,8 @@ interface Props {
 }
 
 const Settings = ({ visible, close } : Props) : JSX.Element => {
-  const { toggleTheme, isThemeDark } = React.useContext(StateContext);
+  const isThemeDark = useAppSelector((state) => state.darkTheme);
+  const dispatch = useAppDispatch();
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={close}>
@@ -26,7 +28,7 @@ const Settings = ({ visible, close } : Props) : JSX.Element => {
           <View style={style.themeSwitchView}>
             <Switch
               value={isThemeDark}
-              onValueChange={toggleTheme}
+              onValueChange={() => { dispatch(toggleDarkTheme()); }}
             />
             <IconButton icon={isThemeDark ? 'weather-night' : 'weather-sunny'} />
           </View>

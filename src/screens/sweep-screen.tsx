@@ -7,11 +7,14 @@ import AddButton from '../components/add-button';
 import SaveButton from '../components/save-button';
 import SweepTable from '../components/sweep-table';
 import SweepTextInput from '../components/sweep-text-input';
-import StateContext, { SweepTrees } from '../contexts/state-context';
-import getLocation from '../datahandle';
+import getLocation from '../utils/get-location';
+import { SweepTrees } from '../utils/data-types';
+import { useAppDispatch } from '../redux/hooks';
+import { addSweep } from '../redux/reducers';
 
 const SweepScreen = () : JSX.Element => {
-  const { addSweep } = React.useContext(StateContext);
+  const dispatch = useAppDispatch();
+
   const [species, setSpecies] = React.useState('');
   const [value, setValue] = React.useState('');
   const [dbh, setDBH] = React.useState('');
@@ -46,13 +49,13 @@ const SweepScreen = () : JSX.Element => {
       setDBH('');
       setHeight('');
       setTrees({});
-      addSweep({
-        loc: await getLocation(),
+      dispatch(addSweep({
+        location: await getLocation(),
         baf: 8, // get from settings
         trees,
-        dbh,
-        height,
-      });
+        dbh: Number(dbh),
+        height: Number(height),
+      }));
     }
   };
   return (

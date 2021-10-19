@@ -7,6 +7,7 @@ import {
   Portal,
   RadioButton,
   Chip,
+  Subheading,
 } from 'react-native-paper';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -53,40 +54,43 @@ const Import = ({ visible, close } : Props) : JSX.Element => {
 
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={close}>
+      <Dialog visible={visible} onDismiss={close} style={style.dialog}>
         <Dialog.Title>Import Data</Dialog.Title>
         <Dialog.Content>
+          <Subheading>Mode</Subheading>
           <RadioButton.Group
             onValueChange={(value) => setImportMode(value)}
             value={importMode}
           >
             <View style={style.row}>
-              <View style={style.row}>
+              <View style={[style.row, style.option]}>
                 <RadioButton value="append" />
                 <Text>Append</Text>
               </View>
-              <View style={style.row}>
+              <View style={[style.row, style.option]}>
                 <RadioButton value="overwrite" />
                 <Text>Overwrite</Text>
               </View>
             </View>
           </RadioButton.Group>
+          <Subheading>Data Type</Subheading>
           <RadioButton.Group
             onValueChange={(value) => setDataType(value)}
             value={dataType}
           >
             <View style={style.row}>
-              <View style={style.row}>
+              <View style={[style.row, style.option]}>
                 <RadioButton value="sweep" />
-                <Text>Sweept</Text>
+                <Text>Sweep</Text>
               </View>
-              <View style={style.row}>
+              <View style={[style.row, style.option]}>
                 <RadioButton value="volplot" />
                 <Text>Volume Plot</Text>
               </View>
             </View>
           </RadioButton.Group>
           <Button
+            style={style.button}
             mode="contained"
             onPress={async () => {
               const fileReturn = await DocumentPicker.getDocumentAsync({
@@ -117,6 +121,19 @@ const style = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  dialog: {
+    width: '85%',
+    maxWidth: 380,
+    alignSelf: 'center',
+  },
+  option: {
+    paddingRight: 6,
+  },
+  button: {
+    marginTop: 12,
+    marginBottom: 12,
+    maxWidth: 310,
   },
 });
 

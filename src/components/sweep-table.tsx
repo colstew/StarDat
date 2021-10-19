@@ -1,15 +1,15 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { DataTable, useTheme, IconButton } from 'react-native-paper';
-import { VolPlotTree } from '../contexts/state-context';
+import { SweepTrees } from '../utils/data-types';
 
-interface Props {
-  tabs?: boolean,
-  trees: VolPlotTree[],
-  removeTree?: (index: number) => void,
+interface Props{
+  tabs?: boolean
+  trees: SweepTrees,
+  removeTree?: (key: string) => void,
 }
 
-const VolPlotTable = ({ tabs, trees, removeTree }: Props) : JSX.Element => {
+const SweepTable = ({ tabs, trees, removeTree } : Props) : JSX.Element => {
   const theme = useTheme();
   return (
     <>
@@ -25,24 +25,20 @@ const VolPlotTable = ({ tabs, trees, removeTree }: Props) : JSX.Element => {
         >
           <DataTable.Header>
             <DataTable.Title>Species</DataTable.Title>
-            <DataTable.Title numeric>DBH (cm)</DataTable.Title>
-            <DataTable.Title numeric>Height (m)</DataTable.Title>
-            <DataTable.Title numeric>NF (%)</DataTable.Title>
+            <DataTable.Title numeric>Count</DataTable.Title>
             {removeTree && <DataTable.Title numeric> </DataTable.Title>}
           </DataTable.Header>
           <ScrollView>
-            {trees.map((tree, index) => (
-              <DataTable.Row key={tree.toString() + Math.random().toString()}>
-                <DataTable.Cell>{tree.species}</DataTable.Cell>
-                <DataTable.Cell numeric>{tree.dbh}</DataTable.Cell>
-                <DataTable.Cell numeric>{tree.height}</DataTable.Cell>
-                <DataTable.Cell numeric>{tree.nf}</DataTable.Cell>
+            {Object.keys(trees).map((key) => (
+              <DataTable.Row key={key}>
+                <DataTable.Cell>{key}</DataTable.Cell>
+                <DataTable.Cell numeric>{trees[key]}</DataTable.Cell>
                 {removeTree && (
                   <DataTable.Cell numeric>
                     <IconButton
                       icon="minus-circle-outline"
                       size={20}
-                      onPress={() => removeTree(index)}
+                      onPress={() => removeTree(key)}
                     />
                   </DataTable.Cell>
                 )}
@@ -57,8 +53,8 @@ const VolPlotTable = ({ tabs, trees, removeTree }: Props) : JSX.Element => {
 
 const style = StyleSheet.create({
   tableView: {
-    marginBottom: 12,
     flex: 1,
+    marginBottom: 12, // interMargin,
   },
   table: {
     flex: 1,
@@ -69,4 +65,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default VolPlotTable;
+export default SweepTable;
