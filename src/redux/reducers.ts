@@ -1,96 +1,103 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Sweep, Plot } from '../utils/data-types';
+import { Sweep, Plot, TreeNames } from '../utils/data-types';
 
-/*
-const storeLocal = async (key: string, value: Sweep[] | Plot[]) => {
-  try {
-    const jsonValue = JSON.stringify(value);
-    await AsyncStorage.setItem(key, jsonValue);
-  } catch (e) {
-    // TODO: log error
-    // saving error
-  }
-};
-
-export const localSweepsRetrieve = async (): Promise<void> => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('@sweeps');
-    setSweeps(jsonValue != null ? JSON.parse(jsonValue) : []);
-  } catch (e) {
-    // TODO: log error
-    // read error
-  }
-};
-
-export const localVolPlotRetrieve = async (): Promise<void> => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('@volplots');
-    setVolPlots(jsonValue != null ? JSON.parse(jsonValue) : []);
-  } catch (e) {
-    // TODO: log error
-    // read error
-  }
-};
-*/
-
-export const sweepsSlice = createSlice({
-  name: 'sweeps',
-  initialState: [] as Sweep[],
+const dataSlice = createSlice({
+  name: 'data',
+  initialState: {
+    sweeps: [] as Sweep[],
+    volplots: [] as Plot[],
+  },
   reducers: {
-    addSweep: (state, action: PayloadAction<Sweep>) => {
+    addSweep: (state, action: PayloadAction<Sweep | Sweep[]>) => {
       const sweep = action.payload;
-      state.push(sweep);
-      // TODO: store local
+      state.sweeps = state.sweeps.concat(sweep);
     },
     removeSweep: (state, action: PayloadAction<number>) => {
       const index = action.payload;
-      state.splice(index, 1);
-      // TODO: store local
+      state.sweeps.splice(index, 1);
     },
-    clearSweeps: (state) => {
-      // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-unused-vars
-      state = [];
-      // TODO: store local
-    },
-  },
-});
-export const { addSweep, removeSweep, clearSweeps } = sweepsSlice.actions;
-export const sweepsReducer = sweepsSlice.reducer;
-
-export const volPlotSlice = createSlice({
-  name: 'volPlots',
-  initialState: [] as Plot[],
-  reducers: {
-    addVolPlot: (state, action: PayloadAction<Plot>) => {
+    addVolPlot: (state, action: PayloadAction<Plot | Plot[]>) => {
       const plot = action.payload;
-      state.push(plot);
-      // TODO: store local
+      state.volplots = state.volplots.concat(plot);
     },
     removeVolPlot: (state, action: PayloadAction<number>) => {
       const index = action.payload;
-      state.splice(index, 1);
-      // TODO: store local
+      state.volplots.splice(index, 1);
+    },
+    clearSweeps: (state) => {
+      state.sweeps = [];
     },
     clearVolPlots: (state) => {
-      // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-unused-vars
-      state = [];
-      // TODO: store local
+      state.volplots = [];
+    },
+    clearAll: (state) => {
+      state.sweeps = [];
+      state.volplots = [];
     },
   },
 });
-export const { addVolPlot, removeVolPlot, clearVolPlots } = volPlotSlice.actions;
-export const volPlotReducer = volPlotSlice.reducer;
 
-export const darkThemeSlice = createSlice({
-  name: 'theme',
-  initialState: false,
+const settingsSlice = createSlice({
+  name: 'settings',
+  initialState: {
+    darkMode: false,
+    exportDir: '',
+    baf: 8,
+    utop: 0.125,
+    blockName: '',
+    userName: '',
+    defaultNF: 99,
+    speciesNames: {
+      S: 'Spruce',
+      F: 'Fir',
+      B: 'Balsam',
+      H: 'Hemlock',
+      C: 'Cedar',
+    } as TreeNames,
+    speciesNumbers: ['75', '175', '375', '575', '875'],
+  },
   reducers: {
-    toggleDarkTheme: (state) => {
-      // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-unused-vars
-      state = !state;
+    setBAF: (state, action: PayloadAction<number>) => {
+      state.baf = action.payload;
+    },
+    setUTop: (state, action: PayloadAction<number>) => {
+      state.utop = action.payload;
+    },
+    setBlockName: (state, action: PayloadAction<string>) => {
+      state.blockName = action.payload;
+    },
+    setUserName: (state, action: PayloadAction<string>) => {
+      state.userName = action.payload;
+    },
+    setDefaultNF: (state, action: PayloadAction<number>) => {
+      state.defaultNF = action.payload;
+    },
+    toggleDarkMode: (state) => {
+      state.darkMode = !state.darkMode;
+    },
+    setExportDir: (state, action: PayloadAction<string>) => {
+      state.exportDir = action.payload;
     },
   },
 });
-export const { toggleDarkTheme } = darkThemeSlice.actions;
-export const darkThemeReducer = darkThemeSlice.reducer;
+
+export const dataReducer = dataSlice.reducer;
+export const settingsReducer = settingsSlice.reducer;
+export const {
+  addSweep,
+  removeSweep,
+  addVolPlot,
+  removeVolPlot,
+  clearSweeps,
+  clearVolPlots,
+  clearAll,
+} = dataSlice.actions;
+export const {
+  setBAF,
+  setUTop,
+  setBlockName,
+  setUserName,
+  setDefaultNF,
+  toggleDarkMode,
+  setExportDir,
+} = settingsSlice.actions;

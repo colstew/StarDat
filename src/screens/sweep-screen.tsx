@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Keyboard } from 'react-native';
 import { Surface } from 'react-native-paper';
 import Header from '../components/header';
@@ -9,20 +9,45 @@ import SweepTable from '../components/sweep-table';
 import SweepTextInput from '../components/sweep-text-input';
 import getLocation from '../utils/get-location';
 import { SweepTrees } from '../utils/data-types';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { addSweep } from '../redux/reducers';
 
 const SweepScreen = () : JSX.Element => {
   const dispatch = useAppDispatch();
+  const baf = useAppSelector((state) => state.settings.baf);
+  const speciesNames = useAppSelector((state) => state.settings.speciesNames);
 
-  const [species, setSpecies] = React.useState('');
-  const [value, setValue] = React.useState('');
-  const [dbh, setDBH] = React.useState('');
-  const [height, setHeight] = React.useState('');
-  const [trees, setTrees] = React.useState<SweepTrees>({});
+  const [species, setSpecies] = useState('');
+  const [value, setValue] = useState('');
+  const [dbh, setDBH] = useState('');
+  const [height, setHeight] = useState('');
+  const [trees, setTrees] = useState<SweepTrees>({});
+  const [saveEnable, setSaveEnable] = useState(false);
+  const [keyboardShow, setKeyboardShow] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardShow(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardShow(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const haveTrees = Object.keys(trees).length > 0;
+    if (haveTrees && dbh && height) setSaveEnable(true);
+    else setSaveEnable(false);
+  }, [trees, dbh, height]);
+
   const addTree = () => {
     if (species && value) {
-      const key = `${species} ${value}`;
+      const key = `${speciesNames[species]} ${value}`;
       if (trees[key]) {
         trees[key] += 1;
       } else {
@@ -41,23 +66,23 @@ const SweepScreen = () : JSX.Element => {
     setTrees({ ...trees });
   };
   const onSave = async () => {
-    // TODO: add loading flag
-    if (Object.keys(trees).length > 0 && dbh && height) {
-      Keyboard.dismiss();
-      setSpecies('');
-      setValue('');
-      setDBH('');
-      setHeight('');
-      setTrees({});
-      dispatch(addSweep({
-        location: await getLocation(),
-        baf: 8, // get from settings
-        trees,
-        dbh: Number(dbh),
-        height: Number(height),
-      }));
-    }
+    const temp = {
+      baf,
+      trees,
+      dbh: Number(dbh),
+      height: Number(height),
+    };
+    setSpecies('');
+    setValue('');
+    setDBH('');
+    setHeight('');
+    setTrees({});
+    dispatch(addSweep({
+      location: await getLocation(),
+      ...temp,
+    }));
   };
+
   return (
     <>
       <Header title="New Sweep" />
@@ -69,7 +94,7 @@ const SweepScreen = () : JSX.Element => {
             value={value}
             setValue={setValue}
           />
-          <AddButton addTree={addTree} />
+          <AddButton enabled={Boolean(species && value)} addTree={addTree} />
         </Surface>
         <Surface style={style.bottomSurface}>
           <SweepTable trees={trees} removeTree={removeTree} />
@@ -79,7 +104,7 @@ const SweepScreen = () : JSX.Element => {
             dbh={dbh}
             setDBH={setDBH}
           />
-          <SaveButton onSave={onSave} />
+          <SaveButton hidden={keyboardShow} enabled={saveEnable} onSave={onSave} />
         </Surface>
       </View>
     </>

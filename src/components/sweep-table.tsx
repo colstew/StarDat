@@ -4,19 +4,19 @@ import { DataTable, useTheme, IconButton } from 'react-native-paper';
 import { SweepTrees } from '../utils/data-types';
 
 interface Props{
-  tabs?: boolean
+  summary?: boolean
   trees: SweepTrees,
   removeTree?: (key: string) => void,
 }
 
-const SweepTable = ({ tabs, trees, removeTree } : Props) : JSX.Element => {
+const SweepTable = ({ summary, trees, removeTree } : Props) : JSX.Element => {
   const theme = useTheme();
   return (
     <>
       <View style={style.tableView}>
         <DataTable style={[
           style.table,
-          tabs && style.tableWithTabs,
+          summary && style.tableWithTabs,
           {
             borderColor: theme.colors.border,
             borderRadius: theme.roundness,
@@ -58,10 +58,11 @@ const style = StyleSheet.create({
   },
   table: {
     flex: 1,
-    borderWidth: 0.3,
+    borderWidth: 1.5,
   },
   tableWithTabs: {
     borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
 });
 

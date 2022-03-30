@@ -8,31 +8,25 @@ import DefaultTheme from './themes/default-theme';
 import DarkTheme from './themes/dark-theme';
 
 const App = (): React.ReactElement => {
-  const theme = useAppSelector((state) => state.darkTheme) ? DarkTheme : DefaultTheme;
+  const theme = useAppSelector((state) => state.settings.darkMode) ? DarkTheme : DefaultTheme;
   // request location permission
   useEffect(() => {
     (async () => {
       try {
+        const enabled = await Location.hasServicesEnabledAsync();
         const { granted } = await Location.getForegroundPermissionsAsync();
-        if (!granted) {
+        if (!granted && enabled) {
           const { granted: given } = await Location.requestForegroundPermissionsAsync();
           if (!given) {
-            throw new Error('Location Permisson Required'); // TODO: notify before termination
+            throw new Error('App: Location Permission Required, not given'); // TODO: notify before termination
           }
         }
       } catch {
+        throw new Error('App: Location Permission Required'); // TODO: notify before termination
         // TODO: handle error
       }
     })();
   }, []);
-
-  // load local sweeps and volplots
-  /*
-  useEffect(() => {
-    State.localSweepsRetrieve();
-    State.localVolPlotRetrieve();
-  }, []);
-  */
 
   return (
     <PaperProvider theme={theme}>
@@ -42,5 +36,14 @@ const App = (): React.ReactElement => {
     </PaperProvider>
   );
 };
+
+/*
+<Snackbar
+          visible
+          onDismiss={() => undefined}
+        >
+          Hello!
+        </Snackbar>
+*/
 
 export default App;

@@ -1,15 +1,24 @@
-import UTMLocation from './utm-location';
-
 export interface SweepTrees {
   [index: string]: number,
 }
 
+export interface TreeNames {
+  [index: string]: string,
+}
+
+export interface UTMLocation {
+  readonly zone: string;
+  readonly easting: number;
+  readonly northing: number;
+}
 export interface VolPlotTree {
-  species: string,
-  dbh: string,
-  height: string,
-  nf: string,
-  volume: string
+  readonly species: string,
+  readonly dbh: number,
+  readonly height: number,
+  readonly nf: number,
+  readonly volume: number,
+  readonly sph: number
+  readonly volha: number
 }
 
 export interface Sweep {
@@ -24,8 +33,9 @@ export interface Plot {
   readonly location: UTMLocation,
   readonly baf: number,
   readonly trees: VolPlotTree[],
-  readonly volhaPlot: number,
-  readonly sphPlot: number,
-  readonly pieceAvg: number,
+  readonly utop: number,
+  readonly plotVolHa: number,
+  readonly plotSPH: number,
+  readonly avgPiece: number,
   readonly vbar: number,
 }

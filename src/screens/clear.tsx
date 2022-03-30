@@ -6,7 +6,7 @@ import {
   Subheading,
 } from 'react-native-paper';
 import { useAppDispatch } from '../redux/hooks';
-import { clearSweeps, clearVolPlots } from '../redux/reducers';
+import { clearAll } from '../redux/reducers';
 
 interface Props {
   visible: boolean,
@@ -14,12 +14,10 @@ interface Props {
 }
 const Clear = ({ visible, close } : Props) : JSX.Element => {
   const dispatch = useAppDispatch();
-  const clearAll = () => {
-    dispatch(clearSweeps());
-    dispatch(clearVolPlots());
+  const clear = () => {
+    dispatch(clearAll());
     close();
   };
-
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={close}>
@@ -30,7 +28,7 @@ const Clear = ({ visible, close } : Props) : JSX.Element => {
           </Subheading>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={clearAll}>
+          <Button onPress={clear}>
             Yes
           </Button>
           <Button onPress={close}>

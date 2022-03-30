@@ -23,10 +23,26 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.stardat"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "sentry-expo"
+    ],
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "cole-9u",
+            "project": "cole-9u",
+            "authToken": "85e82e4716bf457389c0ede051febcb6d507989117e043ce9d75a018058d4a30"
+          }
+        }
+      ]
     }
   }
 }

@@ -1,5 +1,12 @@
-setup expo-sentry
-hide keyboard when touch off keyboard
-make save button not avoid keyboard
-make settings not avoid keyboard
-string format 
+-settings-
+? make settings not avoid keyboard
+
+-app-
+? loading screen for persist or keep splash
+? hide keyboard when touch off keyboard
+display toasts instead of logging error
+app icon
+
+-theme-
+change colours
+

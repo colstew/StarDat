@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import {
   ToggleButton,
   Text,
+  useTheme,
 } from 'react-native-paper';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const TableTabs = ({ activeTab, setTab, count } :Props) : JSX.Element => {
+  const theme = useTheme();
   const updateTab = (value: string) => {
     if (value) setTab(value);
   };
@@ -28,15 +30,31 @@ const TableTabs = ({ activeTab, setTab, count } :Props) : JSX.Element => {
   }
   return (
     <ToggleButton.Row onValueChange={updateTab} value={activeTab}>
-      {count > 1 && tabs}
+      <ScrollView
+        horizontal
+        style={[style.scroll, {
+          borderColor: theme.colors.border,
+          borderRadius: theme.roundness,
+        }]}
+      >
+        {count > 1 && tabs}
+      </ScrollView>
     </ToggleButton.Row>
   );
 };
 
 const style = StyleSheet.create({
-  tab: {
+  scroll: {
+    borderWidth: 1.5,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    marginBottom: 5,
+  },
+  tab: {
+    borderRadius: 0,
+    borderRightWidth: 0.3,
+    width: 76,
+    height: 48,
   },
 });
 

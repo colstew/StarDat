@@ -10,6 +10,14 @@ import {
   Subheading,
 } from 'react-native-paper';
 import * as DocumentPicker from 'expo-document-picker';
+import { importSweeps, importVolPlots } from '../utils/data-migrate';
+import { useAppDispatch } from '../redux/hooks';
+import {
+  addSweep,
+  addVolPlot,
+  clearSweeps,
+  clearVolPlots,
+} from '../redux/reducers';
 
 interface Props {
   visible: boolean,
@@ -23,6 +31,7 @@ interface SelectedState {
 }
 
 const Import = ({ visible, close } : Props) : JSX.Element => {
+  const dispatch = useAppDispatch();
   const [importMode, setImportMode] = React.useState('append');
   const [dataType, setDataType] = React.useState('sweep');
   const [selected, setSelected] = React.useState<SelectedState>({
@@ -32,7 +41,7 @@ const Import = ({ visible, close } : Props) : JSX.Element => {
   });
 
   const updateSelected = (fileReturned?: DocumentPicker.DocumentResult) => {
-    if (fileReturned === undefined) {
+    if (!fileReturned) {
       setSelected({
         uri: null,
         name: null,
@@ -45,6 +54,40 @@ const Import = ({ visible, close } : Props) : JSX.Element => {
         chip: <Chip icon="file" onClose={updateSelected}>{fileReturned.name}</Chip>,
       });
     }
+  };
+
+  const selectFile = async () => {
+    const fileReturn = await DocumentPicker.getDocumentAsync({
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      copyToCacheDirectory: false,
+    });
+    updateSelected(fileReturn);
+  };
+
+  const importFile = async () => {
+    if (selected.uri && dataType === 'sweep') {
+      const importedSweeps = await importSweeps(selected.uri);
+      if (importMode === 'append' && importedSweeps.length) dispatch(addSweep(importedSweeps));
+      else if (importMode === 'overwrite' && importedSweeps.length) {
+        dispatch(clearSweeps());
+        dispatch(addSweep(importedSweeps));
+      } else {
+        throw new Error('no Volume Plots found');
+        // add toast
+      }
+    }
+    if (selected.uri && dataType === 'volplot') {
+      const importedVolPlots = await importVolPlots(selected.uri);
+      if (importMode === 'append' && importedVolPlots.length) dispatch(addVolPlot(importedVolPlots));
+      else if (importMode === 'overwrite' && importedVolPlots.length) {
+        dispatch(clearVolPlots());
+        dispatch(addVolPlot(importedVolPlots));
+      } else {
+        throw new Error('no Volume Plots found');
+        // add toast
+      }
+    }
+    closeImport();
   };
 
   const closeImport = () => {
@@ -92,20 +135,14 @@ const Import = ({ visible, close } : Props) : JSX.Element => {
           <Button
             style={style.button}
             mode="contained"
-            onPress={async () => {
-              const fileReturn = await DocumentPicker.getDocumentAsync({
-                type: 'application/json',
-                copyToCacheDirectory: false,
-              });
-              updateSelected(fileReturn);
-            }}
+            onPress={selectFile}
           >
             Select File
           </Button>
           {selected.chip}
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={closeImport}>
+          <Button disabled={selected.uri === null} onPress={importFile}>
             Import
           </Button>
           <Button onPress={closeImport}>

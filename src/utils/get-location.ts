@@ -1,15 +1,17 @@
 import * as Location from 'expo-location';
 import { LocationObject } from 'expo-location';
 import * as UTM from 'utm';
-import UTMLocation from './utm-location';
+import { UTMLocation } from './data-types';
 
 export const toUTM = (location: LocationObject): UTMLocation => {
-  // if (location === undefined) return null;
   const utm = UTM.fromLatLon(
     location.coords.latitude,
     location.coords.longitude,
   );
-  return { zone: utm.zoneNum + utm.zoneLetter, easting: utm.easting, northing: utm.northing };
+  const zone = utm.zoneNum + utm.zoneLetter;
+  const easting = Math.round(utm.easting * 100) / 100;
+  const northing = Math.round(utm.northing * 100) / 100;
+  return { zone, easting, northing };
 };
 
 const getLocation = async (): Promise<UTMLocation> => {
@@ -19,9 +21,7 @@ const getLocation = async (): Promise<UTMLocation> => {
     const location = await Location.getCurrentPositionAsync(
       { accuracy: Location.Accuracy.Highest },
     );
-    const loc = toUTM(location);
-    // const loc = { lat: location.coords.latitude, lng: location.coords.longitude, utm };
-    return loc;
+    return toUTM(location);
   }
   throw Error('location required');
 };

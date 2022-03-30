@@ -4,6 +4,8 @@ import {
   ToggleButton,
   Text,
 } from 'react-native-paper';
+import { useAppSelector } from '../redux/hooks';
+import { TreeNames } from '../utils/data-types';
 
 interface Props {
   species: string,
@@ -16,33 +18,44 @@ const TreeButtons = ({
   setSpecies,
   value,
   setValue,
-}: Props) : React.ReactElement => (
-  <>
-    <ToggleButton.Row
-      style={style.row}
-      onValueChange={(val) => (val === null ? setSpecies('') : setSpecies(val))}
-      value={species}
-    >
-      <ToggleButton style={style.button} icon={() => <Text>S</Text>} value="S" />
-      <ToggleButton style={style.button} icon={() => <Text>F</Text>} value="F" />
-      <ToggleButton style={style.button} icon={() => <Text>B</Text>} value="B" />
-      <ToggleButton style={style.button} icon={() => <Text>H</Text>} value="H" />
-      <ToggleButton style={style.button} icon={() => <Text>C</Text>} value="C" />
-    </ToggleButton.Row>
+}: Props) : React.ReactElement => {
+  const speciesNames: TreeNames = useAppSelector((state) => state.settings.speciesNames);
+  const speciesNamesShort = Object.keys(speciesNames);
+  const speciesNumbers = useAppSelector((state) => state.settings.speciesNumbers);
+  return (
+    <>
+      <ToggleButton.Row
+        style={style.row}
+        onValueChange={(key) => (key === null ? setSpecies('') : setSpecies(key))}
+        value={species}
+      >
+        {speciesNamesShort.map((key) => (
+          <ToggleButton
+            key={key}
+            style={style.button}
+            icon={() => <Text>{key}</Text>}
+            value={key}
+          />
+        ))}
+      </ToggleButton.Row>
 
-    <ToggleButton.Row
-      style={style.row}
-      onValueChange={(val) => (val === null ? setValue('') : setValue(val))}
-      value={value}
-    >
-      <ToggleButton style={style.button} icon={() => <Text>75</Text>} value="75" />
-      <ToggleButton style={style.button} icon={() => <Text>175</Text>} value="175" />
-      <ToggleButton style={style.button} icon={() => <Text>375</Text>} value="375" />
-      <ToggleButton style={style.button} icon={() => <Text>575</Text>} value="575" />
-      <ToggleButton style={style.button} icon={() => <Text>875</Text>} value="875" />
-    </ToggleButton.Row>
-  </>
-);
+      <ToggleButton.Row
+        style={style.row}
+        onValueChange={(val) => (val === null ? setValue('') : setValue(val))}
+        value={value}
+      >
+        {speciesNumbers.map((val) => (
+          <ToggleButton
+            key={val}
+            style={style.button}
+            icon={() => <Text>{val}</Text>}
+            value={val}
+          />
+        ))}
+      </ToggleButton.Row>
+    </>
+  );
+};
 
 const style = StyleSheet.create({
   // row: baseLayout.inputRow,
